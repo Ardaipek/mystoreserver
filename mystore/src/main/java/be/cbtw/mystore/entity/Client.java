@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class Client {
     private String username;
     private String password;
     private String email;
-    private LocalDate createdAt;
-    private LocalDate lastLogin;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastLogin;
 
 }
