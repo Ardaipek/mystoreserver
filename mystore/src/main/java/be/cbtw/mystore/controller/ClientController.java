@@ -1,7 +1,9 @@
 package be.cbtw.mystore.controller;
 
-import be.cbtw.mystore.entity.Client;
+import be.cbtw.mystore.dto.ClientDto;
+import be.cbtw.mystore.model.Client;
 import be.cbtw.mystore.service.ClientService;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,23 +21,25 @@ public class ClientController {
     }
 
     @GetMapping("/")
-    public List<Client> getAllClients() {
+    public List<ClientDto> getAllClients() {
         return clientService.getAllClients();
     }
 
+
     @GetMapping("/{id}")
-    public Client getClientById(@PathVariable Integer id) throws Exception {
+    public ClientDto getClientById(@PathVariable Integer id) throws Exception {
         return clientService.getClientById(id);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/")
-    public Client saveClient(@RequestBody Client client) {
+    public ClientDto saveClient(@RequestBody Client client) {
         return clientService.saveClient(client);
     }
 
     @PutMapping("/")
-    public Client updateClient(@PathVariable Integer id, @RequestBody Client client) {
-        return clientService.updateClient(id, client);
+    public ClientDto updateClient(@PathVariable Integer id, @RequestBody ClientDto clientDto) {
+        return clientService.updateClient(id, clientDto);
     }
 
     @DeleteMapping("/{id}")

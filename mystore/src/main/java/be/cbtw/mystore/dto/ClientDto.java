@@ -1,21 +1,11 @@
-package be.cbtw.mystore.entity;
-
-import jakarta.persistence.*;
+package be.cbtw.mystore.dto;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "client")
-public class Client {
+public class ClientDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-
     private String username;
-
-
     private String password;
     private String email;
     private LocalDateTime createdAt;
@@ -25,6 +15,9 @@ public class Client {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -38,6 +31,9 @@ public class Client {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getEmail() {
         return email;
