@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/client")
 @Validated
 public class ClientController {
 
@@ -20,29 +19,29 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/clients")
     public List<ClientDto> getAllClients() {
         return clientService.getAllClients();
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/clients/{id}")
     public ClientDto getClientById(@PathVariable Integer id) throws Exception {
         return clientService.getClientById(id);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/")
+    @PostMapping("/clients")
     public ClientDto saveClient(@RequestBody Client client) {
         return clientService.saveClient(client);
     }
 
-    @PutMapping("/")
+    @PutMapping("/clients/{id}")
     public ClientDto updateClient(@PathVariable Integer id, @RequestBody ClientDto clientDto) {
         return clientService.updateClient(id, clientDto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/clients/{id}")
     public void deleteClientById(@PathVariable Integer id) {
         clientService.deleteClientById(id);
     }

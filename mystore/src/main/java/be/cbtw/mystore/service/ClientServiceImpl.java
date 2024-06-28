@@ -40,13 +40,11 @@ public class ClientServiceImpl implements ClientService {
     }
 
     public ClientDto updateClient(Integer id, ClientDto clientDto) {
-        if (clientRepository.existsById(id)) {
-            Client clientEntity = ClientConverter.convertClientToEntity(clientDto);
-            Client updatedClient = clientRepository.save(clientEntity);
-            return ClientConverter.convertClientToDTO(updatedClient);
-        }
+        Client savedClient = clientRepository.findById(id).orElseThrow(() -> new ClientNotFoundException("Client with ID " + id + " not found"));
+        Client clientEntity = ClientConverter.convertClientToEntity(clientDto);
+        clientEntity.setCreatedAt(savedClient.getCreatedAt());
+        return ClientConverter.convertClientToDTO(clientEntity);
 
-        throw new ClientNotFoundException("Client with ID " + id + " not found");
 
     }
 
@@ -58,5 +56,5 @@ public class ClientServiceImpl implements ClientService {
         }
         throw new ClientNotFoundException("Client with ID " + id + " not found");
     }
-    
+
 }

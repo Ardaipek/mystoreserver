@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -39,8 +40,9 @@ public class ClientControllerIntegrationTest {
         clientDto.setPassword("password");
         clientDto.setEmail("anima@cbtw.tech");
 
+
         MvcResult result = this.mockMvc
-                .perform(post("/client/")
+                .perform(post("/clients")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(clientDto))
@@ -57,6 +59,41 @@ public class ClientControllerIntegrationTest {
                 () -> assertNotNull(createdClient.getId())
         );
 
+    }
 
+    @Test
+    public void updateClientTest() throws Exception {
+        ClientDto clientDto = new ClientDto();
+        clientDto.setUsername("Anima");
+        clientDto.setPassword("password");
+        clientDto.setEmail("anima@cbtw.tech");
+
+        MvcResult saveResult = this.mockMvc
+                .perform(post("/clients")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(clientDto))
+                )
+                .andExpect(status().isCreated()).andReturn();
+
+        var createdClientDto = objectMapper.readValue(saveResult.getResponse().getContentAsString(), ClientDto.class);
+
+        createdClientDto.setUsername("John");
+
+        MvcResult updateResult = this.mockMvc
+                .perform(put("/clients/{id}", createdClientDto.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createdClientDto))
+                )
+                .andExpect(status().isOk()).andReturn();
+
+        var updatedClient = objectMapper.readValue(updateResult.getResponse().getContentAsString(), ClientDto.class);
+
+        assertAll(
+                () -> assertEquals("John", updatedClient.getUsername()),
+                () -> assertEquals(clientDto.getPassword(), updatedClient.getPassword()),  // Make sure other fields remain unchanged
+                () -> assertEquals(clientDto.getEmail(), updatedClient.getEmail())
+        );
     }
 }

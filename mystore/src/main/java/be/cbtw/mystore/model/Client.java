@@ -17,10 +17,24 @@ public class Client {
     private LocalDateTime createdAt;
     private LocalDateTime lastLogin;
 
+    public Client() {
+    }
+
+    public Client(Integer id, String username, String password, String email, LocalDateTime lastLogin) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.lastLogin = lastLogin;
+    }
+
     public Integer getId() {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

@@ -17,13 +17,6 @@ public class ClientConverter {
     }
 
     public static Client convertClientToEntity(ClientDto dto) {
-        Client client = new Client();
-        client.setUsername(dto.getUsername());
-        client.setPassword(dto.getPassword());
-        client.setEmail(dto.getEmail());
-
-        client.setCreatedAt(dto.getCreatedAt());
-        client.setLastLogin(dto.getLastLogin());
-        return client;
+        return new Client(dto.getId(), dto.getUsername(), dto.getPassword(), dto.getEmail(), dto.getLastLogin());
     }
 }
