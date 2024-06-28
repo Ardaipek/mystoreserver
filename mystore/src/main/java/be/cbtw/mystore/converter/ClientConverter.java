@@ -9,6 +9,7 @@ public class ClientConverter {
         ClientDto dto = new ClientDto();
         dto.setId(client.getId());
         dto.setUsername(client.getUsername());
+        dto.setPassword(client.getPassword());
         dto.setEmail(client.getEmail());
         dto.setCreatedAt(client.getCreatedAt());
         dto.setLastLogin(client.getLastLogin());
@@ -18,7 +19,9 @@ public class ClientConverter {
     public static Client convertClientToEntity(ClientDto dto) {
         Client client = new Client();
         client.setUsername(dto.getUsername());
+        client.setPassword(dto.getPassword());
         client.setEmail(dto.getEmail());
+
         client.setCreatedAt(dto.getCreatedAt());
         client.setLastLogin(dto.getLastLogin());
         return client;

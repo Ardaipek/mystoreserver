@@ -23,10 +23,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web:3.3.0")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("junit:junit:4.13.1")
     testImplementation("com.h2database:h2:2.2.220")
-
 
 }
 
