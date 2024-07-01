@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @Validated
+@RequestMapping("/clients")
 public class ClientController {
 
     private final ClientService clientService;
@@ -18,29 +19,29 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @GetMapping("/clients")
+    @GetMapping
     public List<ClientRecord> getAllClients() {
         return clientService.getAllClients();
     }
 
 
-    @GetMapping("/clients/{id}")
+    @GetMapping("/{id}")
     public ClientRecord getClientById(@PathVariable Integer id) throws Exception {
         return clientService.getClientById(id);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/clients")
+    @PostMapping
     public ClientRecord saveClient(@RequestBody ClientRecord clientRecord) {
         return clientService.saveClient(clientRecord);
     }
 
-    @PutMapping("/clients/{id}")
+    @PutMapping("/{id}")
     public ClientRecord updateClient(@PathVariable Integer id, @RequestBody ClientRecord clientRecord) {
         return clientService.updateClient(id, clientRecord);
     }
 
-    @DeleteMapping("/clients/{id}")
+    @DeleteMapping("/{id}")
     public void deleteClientById(@PathVariable Integer id) {
         clientService.deleteClientById(id);
     }
