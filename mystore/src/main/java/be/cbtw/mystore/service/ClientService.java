@@ -1,18 +1,17 @@
 package be.cbtw.mystore.service;
 
-import be.cbtw.mystore.dto.ClientDto;
-import be.cbtw.mystore.model.Client;
+import be.cbtw.mystore.dto.ClientRecord;
 
 import java.util.List;
 
 public interface ClientService {
-    List<ClientDto> getAllClients();
+    List<ClientRecord> getAllClients();
 
-    ClientDto getClientById(Integer id) throws Exception;
+    ClientRecord getClientById(Integer id) throws Exception;
 
-    ClientDto saveClient(Client client);
+    ClientRecord saveClient(ClientRecord clientRecord);
 
-    ClientDto updateClient(Integer id, ClientDto clientDto);
+    ClientRecord updateClient(Integer id, ClientRecord clientRecord);
 
     void deleteClientById(Integer id);
 }

@@ -1,7 +1,7 @@
 package be.cbtw.mystore.service;
 
 import be.cbtw.mystore.converter.ClientConverter;
-import be.cbtw.mystore.dto.ClientDto;
+import be.cbtw.mystore.dto.ClientRecord;
 import be.cbtw.mystore.exception.ClientNotFoundException;
 import be.cbtw.mystore.model.Client;
 import be.cbtw.mystore.repository.ClientRepository;
@@ -21,29 +21,30 @@ public class ClientServiceImpl implements ClientService {
         this.clientRepository = clientRepository;
     }
 
-    public List<ClientDto> getAllClients() {
-        return clientRepository.findAll().stream().map(ClientConverter::convertClientToDTO).collect(Collectors.toList());
+    public List<ClientRecord> getAllClients() {
+        return clientRepository.findAll().stream().map(ClientConverter::convertClientToRecord).collect(Collectors.toList());
     }
 
-    public ClientDto getClientById(Integer id) {
+    public ClientRecord getClientById(Integer id) {
         Optional<Client> client = clientRepository.findById(id);
         if (client.isPresent()) {
-            return ClientConverter.convertClientToDTO(client.get());
+            return ClientConverter.convertClientToRecord(client.get());
         }
         throw new ClientNotFoundException("Client with id: " + id + " not found");
     }
 
-    public ClientDto saveClient(Client client) {
+    public ClientRecord saveClient(ClientRecord clientRecord) {
+        Client client = ClientConverter.convertRecordToEntity(clientRecord);
         client.setCreatedAt(LocalDateTime.now());
         Client savedClient = clientRepository.save(client);
-        return ClientConverter.convertClientToDTO(savedClient);
+        return ClientConverter.convertClientToRecord(savedClient);
     }
 
-    public ClientDto updateClient(Integer id, ClientDto clientDto) {
+    public ClientRecord updateClient(Integer id, ClientRecord clientRecord) {
         Client savedClient = clientRepository.findById(id).orElseThrow(() -> new ClientNotFoundException("Client with ID " + id + " not found"));
-        Client clientEntity = ClientConverter.convertClientToEntity(clientDto);
+        Client clientEntity = ClientConverter.convertRecordToEntity(clientRecord);
         clientEntity.setCreatedAt(savedClient.getCreatedAt());
-        return ClientConverter.convertClientToDTO(clientEntity);
+        return ClientConverter.convertClientToRecord(clientEntity);
 
 
     }
@@ -53,8 +54,10 @@ public class ClientServiceImpl implements ClientService {
         boolean clientExists = clientRepository.existsById(id);
         if (clientExists) {
             clientRepository.deleteById(id);
+        } else {
+            throw new ClientNotFoundException("Client with ID " + id + " not found");
+            
         }
-        throw new ClientNotFoundException("Client with ID " + id + " not found");
     }
 
 }
