@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class Client {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private String username;
     private String password;
@@ -17,10 +17,24 @@ public class Client {
     private LocalDateTime createdAt;
     private LocalDateTime lastLogin;
 
+    public Client() {
+    }
+
+    public Client(Integer id, String username, String password, String email, LocalDateTime lastLogin) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.lastLogin = lastLogin;
+    }
+
     public Integer getId() {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -34,6 +48,9 @@ public class Client {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getEmail() {
         return email;

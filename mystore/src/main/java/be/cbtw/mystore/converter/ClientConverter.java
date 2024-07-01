@@ -1,26 +1,16 @@
 package be.cbtw.mystore.converter;
 
-import be.cbtw.mystore.dto.ClientDto;
+import be.cbtw.mystore.dto.ClientRecord;
 import be.cbtw.mystore.model.Client;
 
 public class ClientConverter {
 
-    public static ClientDto convertClientToDTO(Client client) {
-        ClientDto dto = new ClientDto();
-        dto.setId(client.getId());
-        dto.setUsername(client.getUsername());
-        dto.setEmail(client.getEmail());
-        dto.setCreatedAt(client.getCreatedAt());
-        dto.setLastLogin(client.getLastLogin());
-        return dto;
+    public static ClientRecord convertClientToRecord(Client client) {
+        return new ClientRecord(client.getId(), client.getUsername(), client.getPassword(), client.getEmail(), client.getCreatedAt(), client.getLastLogin());
     }
 
-    public static Client convertClientToEntity(ClientDto dto) {
-        Client client = new Client();
-        client.setUsername(dto.getUsername());
-        client.setEmail(dto.getEmail());
-        client.setCreatedAt(dto.getCreatedAt());
-        client.setLastLogin(dto.getLastLogin());
-        return client;
+
+    public static Client convertRecordToEntity(ClientRecord record) {
+        return new Client(record.id(), record.username(), record.password(), record.email(), record.lastLogin());
     }
 }
