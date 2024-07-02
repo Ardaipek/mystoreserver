@@ -2,7 +2,6 @@ package be.cbtw.mystore.converter;
 
 import be.cbtw.mystore.dto.CategoryRecord;
 import be.cbtw.mystore.dto.ProductRecord;
-import be.cbtw.mystore.model.Category;
 import be.cbtw.mystore.model.Product;
 
 public class ProductConverter {
@@ -13,22 +12,13 @@ public class ProductConverter {
                 product.getName(),
                 product.getQuantity(),
                 product.getPrice(),
-                product.getCategory() != null ? new CategoryRecord(product.getCategory().getId(), product.getName()) : null
-        );
+                CategoryConverter.convertCategoryToRecord(product.getCategory()));
+
     }
 
     public static Product convertRecordToProduct(ProductRecord record, CategoryRecord categoryRecord) {
-        return new Product(record.id(), record.name(), record.quantity(), record.price(), new Category(categoryRecord.id(), categoryRecord.name()));
+        return new Product(record.id(), record.name(), record.quantity(), record.price(), CategoryConverter.convertRecordToCategory(categoryRecord));
     }
 
-    public static CategoryRecord convertCategoryToRecord(Category category) {
-        return new CategoryRecord(
-                category.getId(),
-                category.getName()
-        );
-    }
 
-    public static Category convertRecordToCategory(CategoryRecord record) {
-        return new Category(record.id(), record.name());
-    }
 }

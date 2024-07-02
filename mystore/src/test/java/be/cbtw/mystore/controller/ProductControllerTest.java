@@ -17,8 +17,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,7 +45,24 @@ public class ProductControllerTest {
                 () -> assertEquals(record.name(), createdProduct.name()),
                 () -> assertEquals(record.quantity(), createdProduct.quantity()),
                 () -> assertEquals(record.price(), createdProduct.price()),
-                () -> assertEquals(record.category().id(), createdProduct.category().id())
+                () -> assertEquals(record.categoryRecord().id(), createdProduct.categoryRecord().id()),
+                () -> assertEquals(record.categoryRecord().name(), createdProduct.categoryRecord().name())
+        );
+    }
+
+    // Todo: fix why The given id must not be null is when creating a new category
+    @Test
+    public void saveProductWithNewCategoryTest() throws Exception {
+        CategoryRecord categoryRecord = new CategoryRecord(null, "Furniture");
+        ProductRecord record = new ProductRecord(null, "IKEA chair", 1, new BigDecimal("70.99"), categoryRecord);
+        ProductRecord createdProduct = createProduct(record);
+
+        assertAll(
+                () -> assertEquals(record.name(), createdProduct.name()),
+                () -> assertEquals(record.quantity(), createdProduct.quantity()),
+                () -> assertEquals(record.price(), createdProduct.price()),
+                () -> assertNotNull(record.categoryRecord().id()),
+                () -> assertEquals(record.categoryRecord().name(), createdProduct.categoryRecord().name())
         );
     }
 

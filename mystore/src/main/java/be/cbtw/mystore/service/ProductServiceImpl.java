@@ -3,75 +3,71 @@ package be.cbtw.mystore.service;
 
 import be.cbtw.mystore.converter.ProductConverter;
 import be.cbtw.mystore.dto.ProductRecord;
-import be.cbtw.mystore.model.Category;
+import be.cbtw.mystore.exception.EntityNotFoundException;
 import be.cbtw.mystore.model.Product;
-import be.cbtw.mystore.repository.CategoryRepository;
 import be.cbtw.mystore.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ProductServiceImpl {
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
+
+    public ProductServiceImpl(ProductRepository productRepository, CategoryServiceImpl categoryService) {
         this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
     }
 
 
+    @Override
     public List<ProductRecord> getAllProducts() {
         return productRepository.findAll().stream()
                 .map(ProductConverter::convertProductToRecord)
                 .collect(Collectors.toList());
     }
 
-    public Optional<ProductRecord> getProductById(Integer id) {
-        return productRepository.findById(id)
-                .map(ProductConverter::convertProductToRecord);
+    @Override
+    public ProductRecord getProductById(Integer id) {
+        return ProductConverter.convertProductToRecord(productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product with ID: " + id + " not found")));
     }
 
-    public Optional<ProductRecord> createProduct(ProductRecord productRecord) {
-        Product product = ProductConverter.convertRecordToProduct(productRecord, productRecord.category());
+    @Override
+    public ProductRecord createProduct(ProductRecord productRecord) {
+        Product product = ProductConverter.convertRecordToProduct(productRecord, categoryService.getCategoryRecord(productRecord));
         Product savedProduct = productRepository.save(product);
-        return Optional.of(ProductConverter.convertProductToRecord(savedProduct));
+        return ProductConverter.convertProductToRecord(savedProduct);
     }
 
-    public Optional<ProductRecord> updateProduct(Integer id, ProductRecord productRecord) {
-        Optional<Product> existingProduct = productRepository.findById(id);
-        if (existingProduct.isEmpty()) {
-            return Optional.empty();
+    @Override
+    public ProductRecord updateProduct(Integer id, ProductRecord productRecord) {
+        boolean existingProduct = productRepository.existsById(id);
+
+        if (!existingProduct) {
+            throw new EntityNotFoundException("Product with ID: " + id + " does not exist");
         }
+        Product product = ProductConverter.convertRecordToProduct(productRecord, categoryService.getCategoryRecord(productRecord));
 
-        Optional<Category> category = categoryRepository.findById(productRecord.category().id());
-        if (category.isEmpty()) {
-            return Optional.empty();
-        }
 
-        Product productToUpdate = existingProduct.get();
-
-        productToUpdate.setName(productRecord.name());
-        productToUpdate.setQuantity(productRecord.quantity());
-        productToUpdate.setPrice(productRecord.price());
-        productToUpdate.setCategory(category.get());
-
-        Product updatedProduct = productRepository.save(productToUpdate);
-        return Optional.of(ProductConverter.convertProductToRecord(updatedProduct));
+        Product updatedProduct = productRepository.save(product);
+        return ProductConverter.convertProductToRecord(updatedProduct);
     }
 
-    public boolean deleteProduct(Integer id) {
-        if (!productRepository.existsById(id)) {
-            return false;
-        }
 
-        productRepository.deleteById(id);
-        return true;
+    @Override
+    public void deleteProduct(Integer id) {
+        boolean productExists = productRepository.existsById(id);
+        if (productExists) {
+            productRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("Client with ID " + id + " not found");
+
+        }
     }
 }
 

@@ -3,7 +3,7 @@ package be.cbtw.mystore.controller;
 
 import be.cbtw.mystore.dto.ProductRecord;
 import be.cbtw.mystore.service.ProductServiceImpl;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,32 +24,24 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductRecord> getProductById(@PathVariable Integer id) {
-        return productService.getProductById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ProductRecord getProductById(@PathVariable Integer id) {
+        return productService.getProductById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ProductRecord> createProduct(@RequestBody ProductRecord productRecord) {
-        return productService.createProduct(productRecord)
-                .map(record -> ResponseEntity.status(201).body(record))
-                .orElseGet(() -> ResponseEntity.badRequest().build());
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductRecord createProduct(@RequestBody ProductRecord productRecord) {
+        return productService.createProduct(productRecord);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductRecord> updateProduct(@PathVariable Integer id, @RequestBody ProductRecord productRecord) {
-        return productService.updateProduct(id, productRecord)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ProductRecord updateProduct(@PathVariable Integer id, @RequestBody ProductRecord productRecord) {
+        return productService.updateProduct(id, productRecord);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
-        if (productService.deleteProduct(id)) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public void deleteProduct(@PathVariable Integer id) {
+        productService.deleteProduct(id);
+
     }
 }

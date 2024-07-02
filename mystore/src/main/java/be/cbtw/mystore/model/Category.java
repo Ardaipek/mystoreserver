@@ -10,6 +10,7 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "category_generator", sequenceName = "category_seq", allocationSize = 1)
     private Integer id;
 
     @Column(name = "name", nullable = false, length = 100)
@@ -24,6 +25,10 @@ public class Category {
 
     public Category(Integer id, String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public Category(String name) {
         this.name = name;
     }
 
