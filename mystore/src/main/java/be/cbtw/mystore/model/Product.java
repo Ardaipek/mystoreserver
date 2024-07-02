@@ -9,7 +9,8 @@ import java.math.BigDecimal;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_generator")
+    @SequenceGenerator(name = "product_generator", sequenceName = "product_SEQ", allocationSize = 1)
     private Integer id;
 
     @Column(name = "name", nullable = false, length = 100)
@@ -29,7 +30,8 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, Integer quantity, BigDecimal price, Category category) {
+    public Product(Integer id, String name, Integer quantity, BigDecimal price, Category category) {
+        this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.price = price;

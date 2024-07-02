@@ -8,6 +8,6 @@ public record ProductRecord(
         String name,
         Integer quantity,
         BigDecimal price,
-        Integer categoryId
+        CategoryRecord category
 ) {
 }

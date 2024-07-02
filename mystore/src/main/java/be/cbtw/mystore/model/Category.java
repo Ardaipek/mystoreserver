@@ -2,12 +2,11 @@ package be.cbtw.mystore.model;
 
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "category")
-public class Category implements Serializable {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

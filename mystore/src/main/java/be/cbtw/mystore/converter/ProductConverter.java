@@ -13,12 +13,12 @@ public class ProductConverter {
                 product.getName(),
                 product.getQuantity(),
                 product.getPrice(),
-                product.getCategory() != null ? product.getCategory().getId() : null
+                product.getCategory() != null ? new CategoryRecord(product.getCategory().getId(), product.getName()) : null
         );
     }
 
-    public static Product convertRecordToProduct(ProductRecord record, Category category) {
-        return new Product(record.name(), record.quantity(), record.price(), category);
+    public static Product convertRecordToProduct(ProductRecord record, CategoryRecord categoryRecord) {
+        return new Product(record.id(), record.name(), record.quantity(), record.price(), new Category(categoryRecord.id(), categoryRecord.name()));
     }
 
     public static CategoryRecord convertCategoryToRecord(Category category) {

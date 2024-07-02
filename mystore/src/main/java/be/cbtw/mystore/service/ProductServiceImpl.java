@@ -38,12 +38,7 @@ public class ProductServiceImpl {
     }
 
     public Optional<ProductRecord> createProduct(ProductRecord productRecord) {
-        Optional<Category> category = categoryRepository.findById(productRecord.categoryId());
-        if (category.isEmpty()) {
-            return Optional.empty();
-        }
-
-        Product product = ProductConverter.convertRecordToProduct(productRecord, category.get());
+        Product product = ProductConverter.convertRecordToProduct(productRecord, productRecord.category());
         Product savedProduct = productRepository.save(product);
         return Optional.of(ProductConverter.convertProductToRecord(savedProduct));
     }
@@ -54,7 +49,7 @@ public class ProductServiceImpl {
             return Optional.empty();
         }
 
-        Optional<Category> category = categoryRepository.findById(productRecord.categoryId());
+        Optional<Category> category = categoryRepository.findById(productRecord.category().id());
         if (category.isEmpty()) {
             return Optional.empty();
         }
