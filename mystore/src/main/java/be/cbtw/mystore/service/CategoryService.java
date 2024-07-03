@@ -4,6 +4,6 @@ import be.cbtw.mystore.dto.CategoryRecord;
 import be.cbtw.mystore.dto.ProductRecord;
 
 public interface CategoryService {
-    CategoryRecord getCategoryRecord(ProductRecord productRecord);
+    CategoryRecord saveCategory(ProductRecord productRecord);
 
 }

@@ -39,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductRecord createProduct(ProductRecord productRecord) {
-        Product product = ProductConverter.convertRecordToProduct(productRecord, categoryService.getCategoryRecord(productRecord));
+        Product product = ProductConverter.convertRecordToProduct(productRecord, categoryService.saveCategory(productRecord));
         Product savedProduct = productRepository.save(product);
         return ProductConverter.convertProductToRecord(savedProduct);
     }
@@ -51,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
         if (!existingProduct) {
             throw new EntityNotFoundException("Product with ID: " + id + " does not exist");
         }
-        Product product = ProductConverter.convertRecordToProduct(productRecord, categoryService.getCategoryRecord(productRecord));
+        Product product = ProductConverter.convertRecordToProduct(productRecord, categoryService.saveCategory(productRecord));
 
 
         Product updatedProduct = productRepository.save(product);

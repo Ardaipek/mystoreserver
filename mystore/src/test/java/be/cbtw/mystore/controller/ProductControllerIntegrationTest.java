@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("test")
-public class ProductControllerTest {
+public class ProductControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
