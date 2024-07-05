@@ -2,7 +2,7 @@ package be.cbtw.mystore.controller;
 
 
 import be.cbtw.mystore.dto.ProductRecord;
-import be.cbtw.mystore.service.ProductServiceImpl;
+import be.cbtw.mystore.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +12,9 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductServiceImpl productService;
+    private final ProductService productService;
 
-    public ProductController(ProductServiceImpl productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 

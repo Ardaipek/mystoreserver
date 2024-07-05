@@ -35,8 +35,8 @@ public class ProductControllerIntegrationTest extends SpringBootHelperTest {
                 () -> assertEquals(record.name(), createdProduct.name()),
                 () -> assertEquals(record.quantity(), createdProduct.quantity()),
                 () -> assertEquals(record.price(), createdProduct.price()),
-                () -> assertEquals(record.categoryRecord().id(), createdProduct.categoryRecord().id()),
-                () -> assertEquals(record.categoryRecord().name(), createdProduct.categoryRecord().name())
+                () -> assertEquals(record.category().id(), createdProduct.category().id()),
+                () -> assertEquals(record.category().name(), createdProduct.category().name())
         );
     }
 
@@ -50,8 +50,8 @@ public class ProductControllerIntegrationTest extends SpringBootHelperTest {
                 () -> assertEquals(record.name(), createdProduct.name()),
                 () -> assertEquals(record.quantity(), createdProduct.quantity()),
                 () -> assertEquals(record.price(), createdProduct.price()),
-                () -> assertNotNull(createdProduct.categoryRecord().id()),
-                () -> assertEquals(record.categoryRecord().name(), createdProduct.categoryRecord().name())
+                () -> assertNotNull(createdProduct.category().id()),
+                () -> assertEquals(record.category().name(), createdProduct.category().name())
         );
     }
 
@@ -61,7 +61,7 @@ public class ProductControllerIntegrationTest extends SpringBootHelperTest {
         ProductRecord productRecord = new ProductRecord(null, "Chair", 2, new BigDecimal("60.99"), categoryRecord);
 
         ProductRecord createdProduct = createProduct(productRecord);
-        ProductRecord productToUpdateRecord = new ProductRecord(createdProduct.id(), "Table", 5, new BigDecimal("50.00"), createdProduct.categoryRecord());
+        ProductRecord productToUpdateRecord = new ProductRecord(createdProduct.id(), "Table", 5, new BigDecimal("50.00"), createdProduct.category());
 
 
         MvcResult updateResult = this.mockMvc
@@ -79,8 +79,8 @@ public class ProductControllerIntegrationTest extends SpringBootHelperTest {
                 () -> assertEquals(productToUpdateRecord.name(), updatedProduct.name()),
                 () -> assertEquals(productToUpdateRecord.quantity(), updatedProduct.quantity()),
                 () -> assertEquals(productToUpdateRecord.price(), updatedProduct.price()),
-                () -> assertNotNull(updatedProduct.categoryRecord().id()),
-                () -> assertEquals(productToUpdateRecord.categoryRecord().name(), updatedProduct.categoryRecord().name())
+                () -> assertNotNull(updatedProduct.category().id()),
+                () -> assertEquals(productToUpdateRecord.category().name(), updatedProduct.category().name())
         );
 
     }
@@ -133,8 +133,8 @@ public class ProductControllerIntegrationTest extends SpringBootHelperTest {
                 () -> assertEquals(createdProduct.quantity(), retrievedProductRecord.quantity()),
                 () -> assertEquals(createdProduct.price(), retrievedProductRecord.price()),
                 () -> assertEquals(createdProduct.id(), retrievedProductRecord.id()),
-                () -> assertEquals(createdProduct.categoryRecord().id(), retrievedProductRecord.categoryRecord().id()),
-                () -> assertEquals(createdProduct.categoryRecord().name(), retrievedProductRecord.categoryRecord().name())
+                () -> assertEquals(createdProduct.category().id(), retrievedProductRecord.category().id()),
+                () -> assertEquals(createdProduct.category().name(), retrievedProductRecord.category().name())
         );
 
 

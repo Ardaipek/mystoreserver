@@ -22,9 +22,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     public CategoryRecord saveCategory(ProductRecord productRecord) {
 
-        Category category = productRecord.categoryRecord().id() != null ?
-                categoryRepository.findById(productRecord.categoryRecord().id()).orElseThrow(() -> new EntityNotFoundException("Category not found"))
-                : categoryRepository.save(new Category(null, productRecord.categoryRecord().name()));
+        Category category = productRecord.category().id() != null ?
+                categoryRepository.findById(productRecord.category().id()).orElseThrow(() -> new EntityNotFoundException("Category not found"))
+                : categoryRepository.save(new Category(null, productRecord.category().name()));
 
 
         return CategoryConverter.convertCategoryToRecord(category);
