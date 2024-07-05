@@ -55,7 +55,7 @@ public class ClientControllerIntegrationTest extends SpringBootHelperTest {
         var updatedClient = objectMapper.readValue(updateResult.getResponse().getContentAsString(), ClientRecord.class);
 
         assertAll(
-                () -> assertEquals("john", updatedClient.username()),
+                () -> assertEquals(clientToUpdateRecord.username(), updatedClient.username()),
                 () -> assertEquals(clientToUpdateRecord.password(), updatedClient.password()),  // Make sure other fields remain unchanged
                 () -> assertEquals(clientToUpdateRecord.email(), updatedClient.email())
         );
