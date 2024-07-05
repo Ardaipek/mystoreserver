@@ -45,9 +45,6 @@ public class Product {
         this.name = name;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
 
     public String getName() {
         return name;
@@ -58,9 +55,6 @@ public class Product {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
 
     public BigDecimal getPrice() {
         return price;
@@ -70,7 +64,5 @@ public class Product {
         return category;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+
 }
