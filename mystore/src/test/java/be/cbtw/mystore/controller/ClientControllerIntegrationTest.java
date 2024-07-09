@@ -1,30 +1,23 @@
 package be.cbtw.mystore.controller;
 
 import be.cbtw.mystore.dto.ClientRecord;
+import be.cbtw.mystore.util.SpringBootHelperTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@RunWith(SpringRunner.class)
-@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
-@ActiveProfiles("test")
-public class ClientControllerIntegrationTest {
+
+public class ClientControllerIntegrationTest extends SpringBootHelperTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,6 +40,44 @@ public class ClientControllerIntegrationTest {
         );
     }
 
+
+    @Test
+    public void getAllClientsTest() throws Exception {
+        MvcResult getResultWithNoClientsPersisted = getResult();
+
+        List<ClientRecord> clientRecordList = Arrays.asList(objectMapper.readValue(getResultWithNoClientsPersisted.getResponse().getContentAsString(), ClientRecord[].class));
+
+        assertEquals(0, clientRecordList.size());
+
+        ClientRecord record = new ClientRecord(null, "anime", "password", "anima@gmail.com", null, null);
+        ClientRecord savedClientRecord = createClient(record);
+
+        MvcResult getResultWithOneClient = getResult();
+
+        List<ClientRecord> clientRecordListWithOneClient = Arrays.asList(objectMapper.readValue(getResultWithOneClient.getResponse().getContentAsString(), ClientRecord[].class));
+
+
+        assertAll(
+                () -> assertEquals(1, clientRecordListWithOneClient.size()),
+                () -> assertEquals(1, clientRecordListWithOneClient.get(0).id()),
+                () -> assertEquals(record.username(), clientRecordListWithOneClient.get(0).username()),
+                () -> assertEquals(record.password(), clientRecordListWithOneClient.get(0).password()),
+                () -> assertEquals(record.email(), clientRecordListWithOneClient.get(0).email())
+        );
+
+
+    }
+
+    private MvcResult getResult() throws Exception {
+        return this.mockMvc
+                .perform(get("/clients")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk()).andReturn();
+    }
+
+
     @Test
     public void updateClientTest() throws Exception {
         ClientRecord record = new ClientRecord(null, "anime", "password", "anima@gmail.com", null, null);
@@ -65,7 +96,7 @@ public class ClientControllerIntegrationTest {
         var updatedClient = objectMapper.readValue(updateResult.getResponse().getContentAsString(), ClientRecord.class);
 
         assertAll(
-                () -> assertEquals("john", updatedClient.username()),
+                () -> assertEquals(clientToUpdateRecord.username(), updatedClient.username()),
                 () -> assertEquals(clientToUpdateRecord.password(), updatedClient.password()),  // Make sure other fields remain unchanged
                 () -> assertEquals(clientToUpdateRecord.email(), updatedClient.email())
         );
