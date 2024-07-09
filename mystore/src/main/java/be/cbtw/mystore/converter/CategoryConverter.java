@@ -13,6 +13,8 @@ public class CategoryConverter {
     }
 
     public static Category convertRecordToCategory(CategoryRecord record) {
-        return new Category(record.id(), record.name());
+        return new Category(
+                record.id(),
+                record.name());
     }
 }

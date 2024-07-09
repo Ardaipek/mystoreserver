@@ -17,7 +17,12 @@ public class ProductConverter {
     }
 
     public static Product convertRecordToProduct(ProductRecord record, CategoryRecord categoryRecord) {
-        return new Product(record.id(), record.name(), record.quantity(), record.price(), CategoryConverter.convertRecordToCategory(categoryRecord));
+        return new Product(
+                record.id(),
+                record.name(),
+                record.quantity(),
+                record.price(),
+                CategoryConverter.convertRecordToCategory(categoryRecord));
     }
 
 

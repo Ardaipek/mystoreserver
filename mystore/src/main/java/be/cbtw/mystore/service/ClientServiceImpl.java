@@ -2,7 +2,7 @@ package be.cbtw.mystore.service;
 
 import be.cbtw.mystore.converter.ClientConverter;
 import be.cbtw.mystore.dto.ClientRecord;
-import be.cbtw.mystore.exception.EntityNotFoundException;
+import be.cbtw.mystore.exception.BusinessException;
 import be.cbtw.mystore.model.Client;
 import be.cbtw.mystore.repository.ClientRepository;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class ClientServiceImpl implements ClientService {
         if (client.isPresent()) {
             return ClientConverter.convertClientToRecord(client.get());
         }
-        throw new EntityNotFoundException("Client with id: " + id + " not found");
+        throw new BusinessException("Client with id: " + id + " not found");
     }
 
     public ClientRecord saveClient(ClientRecord clientRecord) {
@@ -41,7 +41,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     public ClientRecord updateClient(Integer id, ClientRecord clientRecord) {
-        Client savedClient = clientRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Client with ID " + id + " not found"));
+        Client savedClient = clientRepository.findById(id).orElseThrow(() -> new BusinessException("Client with ID " + id + " not found"));
         Client clientEntity = ClientConverter.convertRecordToEntity(clientRecord);
         clientEntity.setCreatedAt(savedClient.getCreatedAt());
         return ClientConverter.convertClientToRecord(clientEntity);
@@ -55,7 +55,7 @@ public class ClientServiceImpl implements ClientService {
         if (clientExists) {
             clientRepository.deleteById(id);
         } else {
-            throw new EntityNotFoundException("Client with ID " + id + " not found");
+            throw new BusinessException("Client with ID " + id + " not found");
 
         }
     }

@@ -3,7 +3,7 @@ package be.cbtw.mystore.service;
 
 import be.cbtw.mystore.converter.ProductConverter;
 import be.cbtw.mystore.dto.ProductRecord;
-import be.cbtw.mystore.exception.EntityNotFoundException;
+import be.cbtw.mystore.exception.BusinessException;
 import be.cbtw.mystore.model.Product;
 import be.cbtw.mystore.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductRecord getProductById(Integer id) {
-        return ProductConverter.convertProductToRecord(productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product with ID: " + id + " not found")));
+        return ProductConverter.convertProductToRecord(productRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException("Product with ID: " + id + " not found")));
     }
 
     @Override
@@ -49,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
         boolean existingProduct = productRepository.existsById(id);
 
         if (!existingProduct) {
-            throw new EntityNotFoundException("Product with ID: " + id + " does not exist");
+            throw new BusinessException("Product with ID: " + id + " does not exist");
         }
         Product product = ProductConverter.convertRecordToProduct(productRecord, categoryService.saveCategory(productRecord));
 
@@ -65,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
         if (productExists) {
             productRepository.deleteById(id);
         } else {
-            throw new EntityNotFoundException("Client with ID " + id + " not found");
+            throw new BusinessException("Client with ID " + id + " not found");
 
         }
     }
