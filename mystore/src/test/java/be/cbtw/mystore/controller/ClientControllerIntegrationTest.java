@@ -9,6 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,6 +39,44 @@ public class ClientControllerIntegrationTest extends SpringBootHelperTest {
                 () -> assertNotNull(createdClient.id())
         );
     }
+
+
+    @Test
+    public void getAllClientsTest() throws Exception {
+        MvcResult getResultWithNoClientsPersisted = getResult();
+
+        List<ClientRecord> clientRecordList = Arrays.asList(objectMapper.readValue(getResultWithNoClientsPersisted.getResponse().getContentAsString(), ClientRecord[].class));
+
+        assertEquals(0, clientRecordList.size());
+
+        ClientRecord record = new ClientRecord(null, "anime", "password", "anima@gmail.com", null, null);
+        ClientRecord savedClientRecord = createClient(record);
+
+        MvcResult getResultWithOneClient = getResult();
+
+        List<ClientRecord> clientRecordListWithOneClient = Arrays.asList(objectMapper.readValue(getResultWithOneClient.getResponse().getContentAsString(), ClientRecord[].class));
+
+
+        assertAll(
+                () -> assertEquals(1, clientRecordListWithOneClient.size()),
+                () -> assertEquals(1, clientRecordListWithOneClient.get(0).id()),
+                () -> assertEquals(record.username(), clientRecordListWithOneClient.get(0).username()),
+                () -> assertEquals(record.password(), clientRecordListWithOneClient.get(0).password()),
+                () -> assertEquals(record.email(), clientRecordListWithOneClient.get(0).email())
+        );
+
+
+    }
+
+    private MvcResult getResult() throws Exception {
+        return this.mockMvc
+                .perform(get("/clients")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk()).andReturn();
+    }
+
 
     @Test
     public void updateClientTest() throws Exception {

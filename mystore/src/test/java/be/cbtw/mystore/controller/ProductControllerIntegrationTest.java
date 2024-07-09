@@ -2,6 +2,7 @@ package be.cbtw.mystore.controller;
 
 import be.cbtw.mystore.dto.CategoryRecord;
 import be.cbtw.mystore.dto.ProductRecord;
+import be.cbtw.mystore.exception.BusinessException;
 import be.cbtw.mystore.util.SpringBootHelperTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -38,6 +41,40 @@ public class ProductControllerIntegrationTest extends SpringBootHelperTest {
                 () -> assertEquals(record.category().id(), createdProduct.category().id()),
                 () -> assertEquals(record.category().name(), createdProduct.category().name())
         );
+    }
+
+    @Test
+    public void getAllProducts() throws Exception {
+        List<ProductRecord> productRecordListWithNoProduct = getRecordList();
+
+        assertEquals(0, productRecordListWithNoProduct.size());
+
+        CategoryRecord categoryRecord = new CategoryRecord(11, "Electronics");
+        ProductRecord record = new ProductRecord(null, "iPhone", 1, new BigDecimal("1000.99"), categoryRecord);
+        createProduct(record);
+
+        List<ProductRecord> productRecordListWithProduct = getRecordList();
+
+        assertAll(
+                () -> assertEquals(1, productRecordListWithProduct.size()),
+                () -> assertEquals(1, productRecordListWithProduct.get(0).id()),
+                () -> assertEquals(record.name(), productRecordListWithProduct.get(0).name()),
+                () -> assertEquals(record.quantity(), productRecordListWithProduct.get(0).quantity()),
+                () -> assertEquals(record.price(), productRecordListWithProduct.get(0).price())
+        );
+
+
+    }
+
+    private List<ProductRecord> getRecordList() throws Exception {
+        MvcResult getResultWithNoProducts = this.mockMvc
+                .perform(get("/products")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk()).andReturn();
+
+        return Arrays.asList(objectMapper.readValue(getResultWithNoProducts.getResponse().getContentAsString(), ProductRecord[].class));
     }
 
     @Test
@@ -106,6 +143,22 @@ public class ProductControllerIntegrationTest extends SpringBootHelperTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound()).andReturn();
+
+
+    }
+
+    @Test
+    public void deleteProductThatDoesNotExist() throws Exception {
+        MvcResult result = this.mockMvc
+                .perform(delete("/products/{id}", 1)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNotFound()).andReturn();
+
+        Exception resolvedException = result.getResolvedException();
+
+        assertTrue(resolvedException instanceof BusinessException);
 
 
     }
